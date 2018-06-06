@@ -79,7 +79,7 @@ varargout{1} = handles.output;
 
 
 
-function Renda_Callback(hObject, eventdata, handles)
+function Renda_Callback(~, eventdata, handles)
 % hObject    handle to Renda (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -815,7 +815,7 @@ end
 
 
 
-function RB3_Callback(hObject, eventdata, handles)
+function RB3_Callback(~, eventdata, handles)
 % hObject    handle to RB3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

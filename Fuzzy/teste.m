@@ -2,7 +2,7 @@
 fis = newfis('regras');
 
 %% Criação do input 1 (Renda mensal) e suas variáveis
-fis = addvar(fis,'input','Renda',[0 9]);
+fis = addvar(fis,'input','Renda',[0 10000]);
 fis = addmf(fis,'input',1,'baixa','trimf',[0 2000 2000]);
 fis = addmf(fis,'input',1,'media','trimf',[2000 5000 5000]);
 fis = addmf(fis,'input',1,'alta','trimf',[5000 10000 10000]);

@@ -1,3 +1,8 @@
+%% Avaliador Fuzzy para Análise de Viabilidade de Inserção em Estágios da EEEP José Vidal Alves
+% Disciplina: Inteligência Computacional Aplicada
+% Discente: Carlos Estevão
+% Docente e Orientador: Cláudio Sá
+
 function varargout = principal(varargin)
 % PRINCIPAL MATLAB code for principal.fig
 %      PRINCIPAL, by itself, creates a new PRINCIPAL or raises the existing
@@ -22,7 +27,7 @@ function varargout = principal(varargin)
 
 % Edit the above text to modify the response to help principal
 
-% Last Modified by GUIDE v2.5 08-Jun-2018 17:44:32
+% Last Modified by GUIDE v2.5 08-Jun-2018 18:11:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -225,10 +230,10 @@ function btAnalisar_Callback(hObject, eventdata, handles)
     %% Cálculo da saída
     MAVT = str2double(get(handles.MAvaliTeorica,'String'));
     MAVP = str2double(get(handles.MAvaliPratica,'String'));
-    Assi = str2num(get(handles.ValorAssi,'String'));
-    Rel = str2num(get(handles.ValorRel,'String'));
-    
-    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel);   
+    Assi = str2double(get(handles.ValorAssi,'String'));
+    Rel = str2double(get(handles.ValorRel,'String'));
+    verificarToolBox = get(handles.verificar,'Value');
+    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);   
     set(handles.SaidaF,'string',saida);  
     
     
@@ -416,8 +421,9 @@ function TabelaDados_CellSelectionCallback(hObject, eventdata, handles)
     MAVP = Dados(1,2,:);
     Assi = Dados(1,3,:);
     Rel = Dados(1,4,:);
-
-       saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel);   
+    
+    verificarToolBox = get(handles.verificar,'Value');
+    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);   
     set(handles.SaidaF,'string',saida);  
     
     
@@ -435,3 +441,12 @@ function TabelaDados_CellSelectionCallback(hObject, eventdata, handles)
     
     
   
+
+
+% --- Executes on button press in verificar.
+function verificar_Callback(hObject, eventdata, handles)
+% hObject    handle to verificar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of verificar

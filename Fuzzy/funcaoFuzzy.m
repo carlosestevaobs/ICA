@@ -1,4 +1,9 @@
-function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel)
+%% Avaliador Fuzzy para Análise de Viabilidade de Inserção em Estágios da EEEP José Vidal Alves
+% Disciplina: Inteligência Computacional Aplicada
+% Discente: Carlos Estevão
+% Docente e Orientador: Cláudio Sá
+
+function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox)
  %% Criação do arquivo fis
     fis = newfis('regras');
         
@@ -678,5 +683,16 @@ function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel)
     fis = addrule(fis,ListaDeRegras);
 
     %% Cálculo da saída
-    saidaF =  evalfis([MAVT, MAVP, Assi, Rel], fis);      
+    saidaF =  evalfis([MAVT, MAVP, Assi, Rel], fis);    
+    
+    %% Plots
+    if (verificarToolBox == 1)
+    fuzzy(fis);
+    figure (1)
+    plotmf(fis,'input',2);
+    figure (2)
+    gensurf(fis);
+    ruleedit(fis);
+    end
+
 end

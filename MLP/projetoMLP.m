@@ -272,6 +272,7 @@ function bt_Executar_Callback(hObject, eventdata, handles)
             else
                 FuncaoAtivacao = FuncaoTangenteHiperbolica(ProdEntOcu+PesoBiasOculta');             % Equação 7.5 - Função tangente hiperbólica 
             end
+            
             if NumFuncao == 1
                 Saida = FuncaoLogistica(FuncaoAtivacao*PesoOcultaSaida);                   % Equação 7.4 - Função logística
            else

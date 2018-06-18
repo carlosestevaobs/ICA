@@ -1,3 +1,2 @@
 # ICA
-
-Trabalhos e exercícios de Inteligência Computacional Aplicada
+ - Multilayer Perceptron - em construção

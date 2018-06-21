@@ -10,8 +10,11 @@ pesos = [0.0 0.0];
 saida = [0 0 0 1];
 TaxaApren = 0.1; 
 
+
+plotpv(entradas', saida);
 %% Execução do treinamento
 PesosAtualizados = treinar(entradas, pesos, saida, TaxaApren);
+
 
 %% Execução do teste
 teste(entradas, PesosAtualizados);
@@ -40,7 +43,7 @@ function pesosAtualizados = treinar(entradas, pesos, saida, TaxaApren)
         for i = 1:size(saida, 2) 
             SaidaCalculada = CalculaSaida(entradas(i,:), pesos);          
             erro = abs(saida(:,i) - SaidaCalculada);
-            ErroTotal = ErroTotal + erro;
+            ErroTotal = ErroTotal + erro
         
             %% atualizar pesos --> inserir GA aqui
             for j = 1:size(pesos, 2)   

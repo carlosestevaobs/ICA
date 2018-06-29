@@ -314,14 +314,35 @@ function bt_Executar_Callback(hObject, eventdata, handles)
             DistEuclidianaTrein(:,j) = sqrt((CamadaSaida(:,j) - SaidaCalculada(:,j)).^2);
             [menor ClasseTreinCalc] = min(0.9 - SaidaCalculada(:,j));  
             ClassesTreinCalculadas(j) = ClasseTreinCalc;
-            ErroMSETreino(i,:) = immse(SaidaCalculada(:,j), CamadaSaida(:,j));
+                 ErroMSETeste(i,:) = immse(SaidaCalculada(:,i), CamadaSaidaT(:,i));
         end
         % fim da iteração
+        ErroMSETreino(i,:) = immse(SaidaCalculada, CamadaSaida);
         ErroTotal(:,i) = erro;
+        
+        %% Randomização da base
+%             DadosTreinamento = DadosTreinamentoO(:,randperm(size(DadosTreinamentoO,2)));
+%             Saidas = DadosTreinamento(colunaB,:)';
+%             DadosTreinamento(colunaB,:) = [];
+%             size(CamadaSaida)
+% %         %% Tratamento da Base
+% 
+%             colunasC = size(classesNumericas, 2);                   % Recebe a quantidade de linhas e colunas da matriz
+%             SaidasReais = Saidas;    
+%              for k = 1 : colunasC
+%                  rows = Saidas == k;
+%                  SaidasReais( rows, k ) = 0.9;
+%                  rows = Saidas ~= k;
+%                  SaidasReais( rows, k ) = intervaloMin;
+%              end
+%              CamadaSaida = SaidasReais';  
+%              size(CamadaSaida)% insere os dados na camada Saída
+            %% fim da randomização
+        
     end
     ErroQuadratico = sum((ErroTotal(:,1:i).^2),1);                              % Equação 7.9 - Soma dos erros quadráticos
 
-%% Popular do treinamento: matriz de confusão, erro quadrático médio e dados
+%% Popular do treinamento: matriz de confusão, erro quadrático e dados
      t = handles.ErroQuadraticoTrein;
      set(t,'Data',ErroQuadratico');      
      
@@ -344,7 +365,7 @@ function bt_Executar_Callback(hObject, eventdata, handles)
     plot(ErroMSETreino);
     set(gca,'FontSize',6);
     xlabel('Iterações: ');
-    ylabel('Erro quadrático Médio: ');
+    ylabel('Erro quadrático: ');
     
     axes(handles.ClassesGrafTrein);
     bar3(MatrizConfusaoTreinamento);
@@ -406,7 +427,7 @@ end
 erro = CamadaSaidaT - SaidaTeste;
 erroTotalTeste = sum((erro(:,1:i).^2),1);
 
-%% Popular do teste: matriz de confusão, erro quadrático médio e dados
+%% Popular do teste: matriz de confusão, erro quadrático e dados
      t = handles.ErroQuadraticoTeste;
      set(t,'Data',erroTotalTeste');      
 
@@ -428,7 +449,7 @@ erroTotalTeste = sum((erro(:,1:i).^2),1);
     plot(ErroMSETeste);
     set(gca,'FontSize',6);
     xlabel('Iterações: ');
-    ylabel('Erro Quadrático Médio: ');
+    ylabel('Erro quadrático: ');
 
 
     axes(handles.ClassesGrafTeste);

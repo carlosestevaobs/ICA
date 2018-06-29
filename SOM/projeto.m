@@ -35,13 +35,23 @@ function pb_PassoAPasso_Callback(hObject, eventdata, handles)
     TV = str2num(get(handles.gui_vizinhanca,'String'));
     TA = str2double(get(handles.gui_taxaAprend,'String'));
     EP = str2num(get(handles.gui_epocas,'String'));
+    KVizinhos = 3;
     condicaoPImpressao = get(handles.MostrarN,'Value');
     CarregamentoBase = get(handles.endereco,'string');
     Base = readtable(CarregamentoBase);                             % Carrega a base de dados numa tabela
     colunaB = size(Base,2);
     Dados = Base{:,1:colunaB-1};                                    % Transforma numa matriz
     colunas = size(Dados, 2);  
-
+    
+    
+    itens1 = handles.gui_coluna1.String;    
+    selectedIndex1 = handles.gui_coluna1.Value;
+    PlotColuna1 = str2num(itens1{selectedIndex1});
+    
+    itens2 = handles.gui_coluna2.String;    
+    selectedIndex2 = handles.gui_coluna2.Value;
+    PlotColuna2 = str2num(itens2{selectedIndex2});
+  
 %% Carrega a base de dados numa tabela
     ClassesCategoricas = categorical(Base{:,colunaB:colunaB});      % Pegando a última coluna (as classes categóricas)
     
@@ -72,7 +82,11 @@ function pb_PassoAPasso_Callback(hObject, eventdata, handles)
     end
     
 %% Preparação para impressão em 2D
-    ImprimirGrafico(Dados, Classes);                            % Se comentar será mostrado apenas os neurônios
+
+    DadosPlot =  horzcat(Dados(:,PlotColuna1));
+    DadosPlot = horzcat(DadosPlot, Dados(:,PlotColuna2));
+    
+    ImprimirGrafico(DadosPlot, Classes);                            % Se comentar será mostrado apenas os neurônios
     hold on;                                           
 
 %% fazer épocas
@@ -120,18 +134,74 @@ end
     if (condicaoPImpressao == 0) 
         ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e);  
     end
-
-%% Popular tabela do teste
-     t = handles.TabelaNeuronios;
-     set(t,'Data', PesosNeuronios(:,:,4)); 
-    if (condicaoPImpressao == 0) 
-        ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e);  
-    end
-
-%% KNN
-    [linhas, colunas, valores] = size(PesosNeuronios);
-    [linhas, colunas] = size(Dados);
     
+%% Início do KNN 
+[L_Neur, C_Neur, C_Dados] = size(PesosNeuronios)
+    PesosOrganizados = [];
+    A = [];
+       for i = 1 : C_Dados     
+            PesosNovos = reshape(PesosNeuronios(:,:,i),[],1);
+            A = horzcat(A, PesosNovos); 
+        end
+        PesosOrganizados = [PesosOrganizados A];
+    [linhasD, ~] = size(Dados);   
+    [linhasN, ~] = size(PesosOrganizados);
+    
+    %% Calcula da distância
+%      KVizinhos = 1;     
+     for i = 1: linhasN         
+         Distancia = [];
+        for j = 1: linhasD            
+            %% ver erro aqui
+           Distancia(j, i) = sqrt(sum((Dados(j,:) - PesosOrganizados(i,:)) .^ 2));           
+        end        
+        [distancias, id] = sort(Distancia(:,i));
+        
+        %% Classes ordenadas
+        for l = 1: KVizinhos
+            ClassesProximas(i, l,:) = Classes(id(l,:),:);            
+        end     
+     end
+     ClassesProximas
+    %% Criando a matriz de contagem de classes
+     for k = 1: linhasN  
+        for m = 1: size(unique(Classes), 1)          
+            matrizKNN(k, m) = sum(ClassesProximas(k,:) == m);       
+        end
+     end
+          matrizKNN
+       ClasseRepresentada = []; 
+       Sem = 0;
+       Com = 0;
+      for k = 1: linhasN  
+            [quant, classeR] = max(matrizKNN(k,:));
+            if (quant == 1) 
+                ClasseRepresentada(k,:) = 0;
+                Sem = Sem + 1;
+            else
+                ClasseRepresentada(k,:) = classeR;
+                Com = Com + 1;
+            end
+      end    
+       ClasseRepresentada   
+       set(handles.NSemCluster,'string',Sem);
+       set(handles.NComCluster,'string',Com);
+          
+          
+     %% plotar KNN      
+    t = handles.TabelaClasses; 
+    set(t,'Data',matrizKNN);
+    % Neurônios e classes
+    
+    t = handles.KNNClasses; 
+    set(t,'Data',ClasseRepresentada);
+
+    
+    %% Popular pesos novos (todos os pesos)
+     t = handles.TabelaNeuronios;
+     set(t,'Data', PesosOrganizados); 
+
+     
 
 function gui_taxaAprend_Callback(hObject, eventdata, handles)
 function gui_taxaAprend_CreateFcn(hObject, eventdata, handles)
@@ -171,19 +241,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in coluna1.
-function coluna1_Callback(hObject, eventdata, handles)
-% hObject    handle to coluna1 (see GCBO)
+% --- Executes on selection change in gui_coluna1.
+function gui_coluna1_Callback(hObject, eventdata, handles)
+% hObject    handle to gui_coluna1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns coluna1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from coluna1
+% Hints: contents = cellstr(get(hObject,'String')) returns gui_coluna1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from gui_coluna1
 
 
 % --- Executes during object creation, after setting all properties.
-function coluna1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to coluna1 (see GCBO)
+function gui_coluna1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to gui_coluna1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -194,19 +264,19 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on selection change in coluna2.
-function coluna2_Callback(hObject, eventdata, handles)
-% hObject    handle to coluna2 (see GCBO)
+% --- Executes on selection change in gui_coluna2.
+function gui_coluna2_Callback(hObject, eventdata, handles)
+% hObject    handle to gui_coluna2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns coluna2 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from coluna2
+% Hints: contents = cellstr(get(hObject,'String')) returns gui_coluna2 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from gui_coluna2
 
 
 % --- Executes during object creation, after setting all properties.
-function coluna2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to coluna2 (see GCBO)
+function gui_coluna2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to gui_coluna2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -235,8 +305,8 @@ CarregamentoBase = get(handles.endereco,'string');
 Base = readtable(CarregamentoBase); 
 coluna = size(Base, 2); 
 x = 1: 1:coluna-1;
-set(handles.coluna1,'String',{x});
-set(handles.coluna2,'String',{x});
+set(handles.gui_coluna1,'String',{x});
+set(handles.gui_coluna2,'String',{x});
 
 
 % --- Executes on button press in MostrarN.
@@ -246,3 +316,26 @@ function MostrarN_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of MostrarN
+
+
+
+function kVizinhos_Callback(hObject, eventdata, handles)
+% hObject    handle to kVizinhos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of kVizinhos as text
+%        str2double(get(hObject,'String')) returns contents of kVizinhos as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function kVizinhos_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to kVizinhos (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

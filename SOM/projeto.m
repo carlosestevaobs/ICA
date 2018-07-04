@@ -41,8 +41,7 @@ function pb_PassoAPasso_Callback(hObject, eventdata, handles)
     Base = readtable(CarregamentoBase);                             % Carrega a base de dados numa tabela
     colunaB = size(Base,2);
     Dados = Base{:,1:colunaB-1};                                    % Transforma numa matriz
-    colunas = size(Dados, 2);  
-    
+    colunas = size(Dados, 2);      
     
     itens1 = handles.gui_coluna1.String;    
     selectedIndex1 = handles.gui_coluna1.Value;
@@ -82,10 +81,8 @@ function pb_PassoAPasso_Callback(hObject, eventdata, handles)
     end
     
 %% Preparação para impressão em 2D
-
     DadosPlot =  horzcat(Dados(:,PlotColuna1));
-    DadosPlot = horzcat(DadosPlot, Dados(:,PlotColuna2));
-    
+    DadosPlot = horzcat(DadosPlot, Dados(:,PlotColuna2));    
     ImprimirGrafico(DadosPlot, Classes);                            % Se comentar será mostrado apenas os neurônios
     hold on;                                           
 
@@ -124,7 +121,7 @@ function pb_PassoAPasso_Callback(hObject, eventdata, handles)
         end         
 %% Plotagem dos neurônios    
     if (condicaoPImpressao == 1) 
-       ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e);  
+       ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e, PlotColuna1, PlotColuna2);  
     end 
 
 end
@@ -132,11 +129,11 @@ end
      t = handles.tabela;
      set(t,'Data', Dados); 
     if (condicaoPImpressao == 0) 
-        ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e);  
+        ImprimirARedeSom( LinhaSom, ColunaSom, PesosNeuronios, ColunaDados, epocas, e, PlotColuna1, PlotColuna2);  
     end
     
 %% Início do KNN 
-[L_Neur, C_Neur, C_Dados] = size(PesosNeuronios)
+[L_Neur, C_Neur, C_Dados] = size(PesosNeuronios);
     PesosOrganizados = [];
     A = [];
        for i = 1 : C_Dados     
@@ -162,14 +159,14 @@ end
             ClassesProximas(i, l,:) = Classes(id(l,:),:);            
         end     
      end
-     ClassesProximas
+%      ClassesProximas
     %% Criando a matriz de contagem de classes
      for k = 1: linhasN  
         for m = 1: size(unique(Classes), 1)          
             matrizKNN(k, m) = sum(ClassesProximas(k,:) == m);       
         end
      end
-          matrizKNN
+%           matrizKNN
        ClasseRepresentada = []; 
        Sem = 0;
        Com = 0;
@@ -183,7 +180,7 @@ end
                 Com = Com + 1;
             end
       end    
-       ClasseRepresentada   
+%        ClasseRepresentada   
        set(handles.NSemCluster,'string',Sem);
        set(handles.NComCluster,'string',Com);
           

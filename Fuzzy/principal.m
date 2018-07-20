@@ -437,11 +437,9 @@ function TabelaDados_CellSelectionCallback(hObject, eventdata, handles)
     
     if (saida > 3)
         set(handles.TextoSaida,'string',"Apto");
-    end
-    
-    
+    end 
+   
   
-
 
 % --- Executes on button press in verificar.
 function verificar_Callback(hObject, eventdata, handles)

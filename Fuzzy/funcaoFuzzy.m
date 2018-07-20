@@ -11,7 +11,7 @@ function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox)
     fis = addvar(fis,'input','ConTeorico',[0 10]);
     fis = addmf(fis,'input',1,'Insuficiente','trapmf',[0 0 2.5 3]);
     fis = addmf(fis,'input',1,'Regular','trapmf',[2.5 3.5 5 6]);
-    fis = addmf(fis,'input',1,'Bom','trapmf',[5.5 6 6.5 7.5]);
+    fis = addmf(fis,'input',1,'Bom','trapmf',[5.5 6 6.5 7]);
     fis = addmf(fis,'input',1,'MuitoBom','trapmf', [6.5 7 7.5 8]);
     fis = addmf(fis,'input',1,'Excelente','trapmf', [7.5 8 10 10]);
 
@@ -19,7 +19,7 @@ function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox)
     fis = addvar(fis,'input','ConTecnico',[0 10]);
     fis = addmf(fis,'input',2,'Insuficiente','trapmf',[0 0 2.5 3]);
     fis = addmf(fis,'input',2,'Regular','trapmf',[2.5 3.5 5 6]);
-    fis = addmf(fis,'input',2,'Bom','trapmf',[5.5 6 6.5 7.5]);
+    fis = addmf(fis,'input',2,'Bom','trapmf',[5.5 6 6.5 7]);
     fis = addmf(fis,'input',2,'MuitoBom','trapmf', [6.5 7 7.5 8]);
     fis = addmf(fis,'input',2,'Excelente','trapmf', [7.5 8 10 10]);
 
@@ -49,9 +49,9 @@ function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox)
     %% Criação das regras
     % Especificação das regras conforme o site MathWorks.com (com adaptação para mais colunas)
     % Columns 1, 2, 3, and 4 - Index of membership function for inputs
-    % Column 6 - Index of membership function for output
-    % Column 7 - Rule weight
-    % Column 8 - Fuzzy operator (1 for AND, 2 for OR)
+    % Column 5 - Index of membership function for output
+    % Column 6 - Rule weight
+    % Column 7 - Fuzzy operator (1 for AND, 2 for OR)
     % Fonte: https://www.mathworks.com/help/fuzzy/working-from-the-command-line.html
 
     ListaDeRegras = [ ...   
@@ -689,8 +689,18 @@ function saidaF = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox)
     if (verificarToolBox == 1)
     fuzzy(fis);
     figure (1)
-    plotmf(fis,'input',2);
+    title("Conhecimento teórico");
+    plotmf(fis,'input',1);
     figure (2)
+    title("Conhecimento técnico (prático)");
+    plotmf(fis,'input',2);
+    figure (3)
+    title("Assiduidade");
+    plotmf(fis,'input',3);
+    figure (4)
+    title("Relacionamento Interpessoal");
+    plotmf(fis,'input',4);
+    figure (5)
     gensurf(fis);
     ruleedit(fis);
     end

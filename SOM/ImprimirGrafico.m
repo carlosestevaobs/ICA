@@ -31,7 +31,8 @@ function ImprimirGrafico(Dados, Classe )
     plot(Dados(cluster_9,1),Dados(cluster_9,2),'c^','LineWidth',1,'MarkerEdgeColor','b','MarkerFaceColor','c','MarkerSize',8);
     plot(Dados(cluster_10,1),Dados(cluster_10,2),'k^','LineWidth',1,'MarkerEdgeColor','b','MarkerFaceColor','k','MarkerSize',8);
         
-    set(gcf,'un','n','pos',[0,0,1,1]);figure(gcf)
+    set(gcf,'un','n','pos',[0,0,1,1]);
+    figure(gcf)
     hold off;
 end
 

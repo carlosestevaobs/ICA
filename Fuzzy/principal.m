@@ -32,11 +32,11 @@ function varargout = principal(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @principal_OpeningFcn, ...
-                   'gui_OutputFcn',  @principal_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @principal_OpeningFcn, ...
+    'gui_OutputFcn',  @principal_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -68,7 +68,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = principal_OutputFcn(hObject, eventdata, handles) 
+function varargout = principal_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -176,7 +176,7 @@ function AssRegular_Callback(hObject, eventdata, handles)
 % hObject    handle to AssRegular (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorAssi,'string',2);
+set(handles.ValorAssi,'string',2.5);
 set(handles.AssRuim, 'Enable', 'on');
 set(handles.AssRegular, 'Enable', 'off');
 set(handles.AssBom, 'Enable', 'on');
@@ -189,7 +189,7 @@ function AssBom_Callback(hObject, eventdata, handles)
 % hObject    handle to AssBom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorAssi,'string',3);
+set(handles.ValorAssi,'string',3.25);
 set(handles.AssRuim, 'Enable', 'on');
 set(handles.AssRegular, 'Enable', 'on');
 set(handles.AssBom, 'Enable', 'off');
@@ -201,7 +201,7 @@ function AssMuitoBom_Callback(hObject, eventdata, handles)
 % hObject    handle to AssMuitoBom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorAssi,'string',4);
+set(handles.ValorAssi,'string',4.25);
 set(handles.AssRuim, 'Enable', 'on');
 set(handles.AssRegular, 'Enable', 'on');
 set(handles.AssBom, 'Enable', 'on');
@@ -227,54 +227,78 @@ function btAnalisar_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
-    %% Cálculo da saída
-    MAVT = str2double(get(handles.MAvaliTeorica,'String'));
-    MAVP = str2double(get(handles.MAvaliPratica,'String'));
-    Assi = str2double(get(handles.ValorAssi,'String'));
-    Rel = str2double(get(handles.ValorRel,'String'));
-    verificarToolBox = get(handles.verificar,'Value');
-    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);   
-    set(handles.SaidaF,'string',saida);  
-    
-    
-    if (saida < 2)       
-         set(handles.TextoSaida,'string',"Inapto");        
-    end
-    
-    if (saida >= 2 && saida < 3)
-        set(handles.TextoSaida,'string',"Atenção");
-    end
-    
-    if (saida > 3)
-        set(handles.TextoSaida,'string',"Apto");
-    end   
-    
-    
+%% Cálculo da saída
+MAVT = str2double(get(handles.MAvaliTeorica,'String'));
+MAVP = str2double(get(handles.MAvaliPratica,'String'));
+Assi = str2double(get(handles.ValorAssi,'String'));
+Rel = str2double(get(handles.ValorRel,'String'));
+verificarToolBox = get(handles.verificar,'Value');
+saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);
+
+
+if (saida < 2)
+    set(handles.TextoSaida,'string',"Inapto");
+end
+
+if (saida >= 2 && saida < 3)
+    set(handles.TextoSaida,'string',"Atenção");
+end
+
+if (saida > 3)
+    set(handles.TextoSaida,'string',"Apto");
+end
+
+
 % --- Executes on button press in bt_carregar.
 function bt_carregar_Callback(hObject, eventdata, handles)
 % hObject    handle to bt_carregar (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    
-%% Carregamento da base de dados
-    [file,path,indx] = uigetfile;
-    if isequal(file,0)
-       disp('Cancelado pelo usuário')
-    else
-       disp(['Selecionado: ', fullfile(path, file)])
-    end
-        a = strcat(path,file);
-        set(handles.enderecoBase,'string',a);
-       
-        CarregamentoBase = get(handles.enderecoBase,'string');
-        Base = readtable(CarregamentoBase );
-        colunaB = size(Base,2);
-        Dados = Base{:,1:colunaB};
-        
 
-    %% Popular a tabela com os dados carregados
-        t = handles.TabelaDados; 
-        set(t,'Data',Dados); 
+%% Carregamento da base de dados
+[file,path,indx] = uigetfile;
+if isequal(file,0)
+    disp('Cancelado pelo usuário')
+else
+    disp(['Selecionado: ', fullfile(path, file)])
+end
+a = strcat(path,file);
+set(handles.enderecoBase,'string',a);
+
+CarregamentoBase = get(handles.enderecoBase,'string');
+Base = readtable(CarregamentoBase );
+colunaB = size(Base,2);
+Dados = Base{:,1:colunaB};
+
+%% Popular a tabela com os dados carregados
+t = handles.TabelaDados;
+set(t,'Data',Dados);
+
+%% Analisar a tabela completa
+[linhas, ~] = size(Dados);
+
+for i = 1 : linhas
+    MAVT = Dados(i,1,:);
+    MAVP = Dados(i,2,:);
+    Assi = Dados(i,3,:);
+    Rel = Dados(i, 4,:);
+    verificarToolBox = get(handles.verificar,'Value');
+    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);
+    ranking(i,1) = i;
+    ranking(i,2) = saida;
+end
+
+ranking = sortrows(ranking, 2, 'descend');
+
+% ranking = sort(ranking(:,2))
+% ranking2 = ranking(end:-1:1)
+
+
+%% Popular tabela
+     t = handles.tabelaRanking;
+     set(t,'Data', ranking(:,1));
+
+
 
 
 % --- Executes on button press in RelExcelente.
@@ -294,7 +318,7 @@ function RelMuitoBom_Callback(hObject, eventdata, handles)
 % hObject    handle to RelMuitoBom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorRel,'string',4);
+set(handles.ValorRel,'string',4.25);
 set(handles.RelRuim, 'Enable', 'on');
 set(handles.RelRegular, 'Enable', 'on');
 set(handles.RelBom, 'Enable', 'on');
@@ -306,7 +330,7 @@ function RelBom_Callback(hObject, eventdata, handles)
 % hObject    handle to RelBom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorRel,'string',3);
+set(handles.ValorRel,'string',3.25);
 set(handles.RelRuim, 'Enable', 'on');
 set(handles.RelRegular, 'Enable', 'on');
 set(handles.RelBom, 'Enable', 'off');
@@ -318,7 +342,7 @@ function RelRegular_Callback(hObject, eventdata, handles)
 % hObject    handle to RelRegular (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-set(handles.ValorRel,'string',2);
+set(handles.ValorRel,'string',2.5);
 set(handles.RelRuim, 'Enable', 'on');
 set(handles.RelRegular, 'Enable', 'off');
 set(handles.RelBom, 'Enable', 'on');
@@ -411,35 +435,34 @@ function TabelaDados_CellSelectionCallback(hObject, eventdata, handles)
 % eventdata  structure with the following fields (see MATLAB.UI.CONTROL.TABLE)
 %	Indices: row and column indices of the cell(s) currently selecteds
 % handles    structure with handles and user data (see GUIDATA)
-    data = get(hObject,'Data');
-    indices = eventdata.Indices;
-    linha = indices(:,1);
-    tableData = get(handles.TabelaDados, 'data');
-        
-    Dados = tableData(linha,:);
-    MAVT = Dados(1,1,:);
-    MAVP = Dados(1,2,:);
-    Assi = Dados(1,3,:);
-    Rel = Dados(1,4,:);
-    
-    verificarToolBox = get(handles.verificar,'Value');
-    saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);   
-    set(handles.SaidaF,'string',saida);  
-    
-    
-    if (saida < 2)       
-         set(handles.TextoSaida,'string',"Inapto");        
-    end
-    
-    if (saida >= 2 && saida < 3)
-        set(handles.TextoSaida,'string',"Atenção");
-    end
-    
-    if (saida > 3)
-        set(handles.TextoSaida,'string',"Apto");
-    end 
-   
-  
+data = get(hObject,'Data');
+indices = eventdata.Indices;
+linha = indices(:,1);
+tableData = get(handles.TabelaDados, 'data');
+
+Dados = tableData(linha,:);
+MAVT = Dados(1,1,:);
+MAVP = Dados(1,2,:);
+Assi = Dados(1,3,:);
+Rel = Dados(1,4,:);
+
+verificarToolBox = get(handles.verificar,'Value');
+saida = funcaoFuzzy(MAVT, MAVP, Assi, Rel, verificarToolBox);
+
+
+if (saida < 2)
+    set(handles.TextoSaida,'string',"Inapto");
+end
+
+if (saida >= 2 && saida < 3)
+    set(handles.TextoSaida,'string',"Atenção");
+end
+
+if (saida > 3)
+    set(handles.TextoSaida,'string',"Apto");
+end
+
+
 
 % --- Executes on button press in verificar.
 function verificar_Callback(hObject, eventdata, handles)

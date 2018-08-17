@@ -6,7 +6,7 @@
     clear;                                                      % Limpa o Workspace
     close all;                                                  % Fecha todas as janelas
     clc;      
-    tic
+    tic    
 %% Parâmetros iniciais
     Base = readtable('column_3C.dat'); 
     QtdeEntradas = size(Base,1);

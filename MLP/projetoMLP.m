@@ -271,7 +271,7 @@ function bt_Executar_Callback(hObject, eventdata, handles)
             if NumFuncao == 1
                 FuncaoAtivacao = FuncaoLogistica(ProdEntOcu+PesoBiasOculta');                       % Equação 7.4 - Função logística
                 Saida = FuncaoLogistica(FuncaoAtivacao*PesoOcultaSaida);                   % Equação 7.4 - Função logística
-                   DerivadaSaida = FuncaoDerivadaLogistica(Saida);                     % Equação 7.13 - Cálculo da Derivada Saída
+                DerivadaSaida = FuncaoDerivadaLogistica(Saida);                     % Equação 7.13 - Cálculo da Derivada Saída
             else
                 FuncaoAtivacao = FuncaoTangenteHiperbolica(ProdEntOcu+PesoBiasOculta');             % Equação 7.5 - Função tangente hiperbólica 
                 Saida = FuncaoTangenteHiperbolica(FuncaoAtivacao*PesoOcultaSaida);         % Equação 7.5 - Função tangente hiperbólica

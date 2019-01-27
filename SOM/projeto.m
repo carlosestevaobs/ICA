@@ -3,6 +3,7 @@
 % Discente: Carlos Estevão
 % Docente e Orientador: Cláudio Sá
 
+
 function varargout = projeto(varargin)
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -35,7 +36,7 @@ CS = str2num(get(handles.gui_colunas,'String'));
 TV = str2num(get(handles.gui_vizinhanca,'String'));
 TA = str2double(get(handles.gui_taxaAprend,'String'));
 EP = str2num(get(handles.gui_epocas,'String'));
-KVizinhos = str2num(get(handles.gui_knn,'String'));;
+KVizinhos = str2num(get(handles.gui_knn,'String'));
 condicaoPImpressao = get(handles.MostrarN,'Value');
 CarregamentoBase = get(handles.endereco,'string');
 Base = readtable(CarregamentoBase);                             % Carrega a base de dados numa tabela
@@ -83,6 +84,7 @@ end
 %% Preparação para impressão em 2D
 DadosPlot =  horzcat(Dados(:,PlotColuna1));
 DadosPlot = horzcat(DadosPlot, Dados(:,PlotColuna2));
+
 ImprimirGrafico(DadosPlot, Classes);                            % Se comentar será mostrado apenas os neurônios
 hold on;
 
@@ -125,7 +127,7 @@ for e = 1: epocas
     end
     
 end
-%% Popular tabela do teste
+%% Popular tabela 
 t = handles.tabela;
 set(t,'Data', Dados);
 if (condicaoPImpressao == 0)
@@ -157,6 +159,9 @@ for i = 1: linhasN
         ClassesProximas(i, l,:) = Classes(id(l,:),:);
     end
 end
+
+
+
 %% Criando a matriz de contagem de classes
 for k = 1: linhasN
     for m = 1: size(unique(Classes), 1)
@@ -200,8 +205,6 @@ set(t,'Data',ClasseRepresentada);
 %% Popular pesos novos (todos os pesos)
 t = handles.TabelaNeuronios;
 set(t,'Data', PesosOrganizados);
-
-
 
 function gui_taxaAprend_Callback(hObject, eventdata, handles)
 function gui_taxaAprend_CreateFcn(hObject, eventdata, handles)
@@ -362,3 +365,15 @@ function gui_knn_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in Gui_Visualizar.
+function Gui_Visualizar_Callback(hObject, eventdata, handles)
+% hObject    handle to Gui_Visualizar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+
+
